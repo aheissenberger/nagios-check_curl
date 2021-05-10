@@ -2,7 +2,7 @@
 <?php
 
 // Changeable variables
-$Debug=0;
+$Debug=1;
 $Timeout=10;
 // --------------------
 
@@ -100,6 +100,17 @@ if ($Pocet>1){
       case '-F':    
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         if ($Debug)echo "\nDEBUG: -F";
+        break;
+      case '-FM':
+        if ($Pocet>$i+1){
+          $forwardMax=$argv[++$i];
+          curl_setopt($ch, CURLOPT_MAXREDIRS, $argv[$i]);
+          if ($Debug)echo "\nDEBUG: -FM ".$argv[$i];
+        }else{
+          echo "ERROR in parsing argument -FM: missing value";
+          Manual();
+          exit(2);
+        }
         break;
 
       case '-X':    
@@ -365,6 +376,7 @@ echo "------- check_curl.php written by Vit Safar (CZ), v1.0, 20.10.2006 -------
     -G Grep page on STRING (s)(can be set multiple times)
     -L Show page (-)
     -F Follow redirects (-)
+    -FM Follow MAX redirects (i)(default: 20, unlimited: -1)
     -I Ignore SSL certificate errors (-)
     -X Exclude performance data (default: include)
     -Tc Ccritical page return time (i)
